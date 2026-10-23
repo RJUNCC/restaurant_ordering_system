@@ -1,0 +1,14 @@
+[project]
+name = "restaurant-ordering-system"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "cryptography>=50.0.2",
+    "fastapi>=0.161.1",
+    "httpx>=0.28.1",
+    "pymysql>=1.2.3",
+    "pytest>=9.1.1",
+    "pytest-mock>=3.17.0",
+    "sqlalchemy>=2.1.6",
+    "uvicorn>=0.54.0",
+]
