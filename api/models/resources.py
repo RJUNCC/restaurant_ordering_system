@@ -9,6 +9,7 @@ class Resource(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     item = Column(String(100), unique=True, nullable=False)
-    amount = Column(Integer, index=True, nullable=False, server_default='0.0')
+    amount = Column(DECIMAL(10, 2), nullable=False, server_default="0")
+    unit = Column(String(20), nullable=False)
 
     recipes = relationship("Recipe", back_populates="resource")
