@@ -8,7 +8,7 @@ class Resource(Base):
     __tablename__ = "resources"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    item = Column(String(100), unique=True, nullable=False)
+    ingredient = Column(String(100), unique=True, nullable=False)
     amount = Column(DECIMAL(10, 2), nullable=False, server_default="0")
     unit = Column(String(20), nullable=False)
 

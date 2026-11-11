@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class ResourceBase(BaseModel):
-    item: str
+    ingredient: str
     amount: float
     unit: str
 
@@ -13,8 +13,7 @@ class ResourceCreate(ResourceBase):
 
 
 class ResourceUpdate(BaseModel):
-    item: Optional[str] = None
-    amount: Optional[int] = None
+    ingredient: Optional[str] = None
     amount: Optional[float] = None
     unit: Optional[str] = None
 
