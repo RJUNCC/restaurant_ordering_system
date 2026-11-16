@@ -9,7 +9,6 @@ from ..dependencies.database import Base
 class PaymentType(PyEnum):
     debit = "debit"
     credit = "credit"
-    gift_card = "gift_card"
 
 
 class PaymentStatus(PyEnum):
