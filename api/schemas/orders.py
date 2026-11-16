@@ -6,8 +6,10 @@ from .order_details import OrderDetail
 
 
 class OrderBase(BaseModel):
-    customer_name: str
+    customer_id: int
     description: Optional[str] = None
+    total_price = Column(DECIMAL(20, 2), nullable=False, server_default="0")
+    order_type: OrderType = OrderType.TAKEOUT
 
 
 class OrderCreate(OrderBase):
@@ -15,8 +17,10 @@ class OrderCreate(OrderBase):
 
 
 class OrderUpdate(BaseModel):
-    customer_name: Optional[str] = None
+    customer_id: Optional[int] = None
     description: Optional[str] = None
+    total_price: Optional[Decimal] = None
+    order_type: Optional[OrderType] = None
 
 
 class Order(OrderBase):
@@ -26,3 +30,8 @@ class Order(OrderBase):
 
     class ConfigDict:
         from_attributes = True
+
+
+class OrderType(str, Enum):
+    TAKEOUT = "takeout"
+    DELIVERY = "delivery"

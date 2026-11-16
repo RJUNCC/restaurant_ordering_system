@@ -2,6 +2,12 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from ..dependencies.database import Base
+import enum
+
+
+class OrderType(enum.Enum):
+    TAKEOUT = "takeout"
+    DELIVERY = "delivery"
 
 
 class Order(Base):
@@ -14,5 +20,8 @@ class Order(Base):
     description = Column(String(300))
     total_price = Column(DECIMAL(20, 2), nullable=False)
     tracking_number = Column(String(100), nullable=True)
+    order_type = Column(Enum(OrderType), nullable=False)
+
+
 
     order_details = relationship("OrderDetail", back_populates="order")

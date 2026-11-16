@@ -16,7 +16,7 @@ def db_session(mocker):
 def test_create_order(db_session):
     # Create a sample order
     order_data = {
-        "customer_name": "John Doe",
+        "customer_id": "John Doe",
         "description": "Test order"
     }
 
