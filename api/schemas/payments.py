@@ -16,7 +16,7 @@ class PaymentCreate(PaymentBase):
 
 
 class PaymentUpdate(BaseModel):
-    status: Optional[PaymentStatus]
+    status: Optional[PaymentStatus] = None
 
 
 class Payment(PaymentBase):
