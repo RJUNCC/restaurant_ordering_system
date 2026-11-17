@@ -6,9 +6,11 @@ from ..models.payments import PaymentStatus, PaymentType
 
 
 class PaymentBase(BaseModel):
+    order_id: int
     type: PaymentType
     status: PaymentStatus
-    card_number: str
+    amount: float
+    card_number: Optional[str] = None  # last 4 digits only
 
 
 class PaymentCreate(PaymentBase):
