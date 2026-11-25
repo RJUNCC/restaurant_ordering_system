@@ -4,8 +4,9 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class ReviewBase(BaseModel):
-    sandwich_id: int
+    menu_id: Optional[int] = None
     customer_id: Optional[int] = None
+    order_id: Optional[int] = None
     review_text: Optional[str] = None
     score: int = Field(ge=1, le=5)
 
