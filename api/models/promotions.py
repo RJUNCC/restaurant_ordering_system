@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Integer, String, DECIMAL, DATETIME
+from sqlalchemy.orm import relationship
+
 from ..dependencies.database import Base
 
 
@@ -10,3 +12,5 @@ class Promotion(Base):
     start_date = Column(DATETIME, nullable=True)
     end_date = Column(DATETIME, nullable=True)
     discount = Column(DECIMAL(4, 2), nullable=False)
+
+    orders = relationship("Order", back_populates="promotion")
