@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
-from ..models import customers as customer_model, menu as menu_model, order_details as detail_model
+from ..models import customers as customer_model, menu as menu_model, order_details as detail_model, promotions as promotions_model
 from sqlalchemy.exc import SQLAlchemyError
 from decimal import Decimal
-
+from datetime import datetime
 
 def create(db: Session, request):
     new_item = model.Order(
@@ -90,11 +90,28 @@ def checkout(db: Session, request):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Menu item {item.menu_id} not found")
         subtotal += menu_item.price * item.amount
 
+    promo = None 
+    total = subtotal 
+    if request.promo_code:
+        promo = db.query(promotions_model.Promotion).filter(promotions_model.Promotion.promo_code == request.promo_code).first()
+
+        if promo is None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid promo code")
+
+        now = datetime.now()
+        if promo.start_date and now < promo.start_date:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Promo code is not active yet")
+        if promo.end_date and now > promo.end_date:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Promo code has expired")
+
+        total = (subtotal * (100 - promo.discount) / 100).quantize(Decimal("0.01"))
+
     order = model.Order(
         customer=customer,
         order_type=request.order_type,
         description=request.description,
-        total_price=subtotal
+        total_price=total,
+        promotion=promo
         )
 
     for item in request.items:
@@ -106,3 +123,5 @@ def checkout(db: Session, request):
     except SQLAlchemyError as e:
         db.rollback()
     return order
+
+    
