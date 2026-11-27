@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from .order_details import OrderDetail
 from ..models.orders import OrderStatus, OrderType
 
@@ -37,3 +37,17 @@ class Order(OrderBase):
 
     class ConfigDict:
         from_attributes = True
+
+class CheckoutItem(BaseModel):
+    menu_id: int
+    amount: int = Field(ge=1)
+
+class GuestCheckout(BaseModel):
+    name: str
+    phone: str
+    address: str 
+    email: Optional[str]= None
+    order_type: OrderType
+    items: list[CheckoutItem] = Field(min_length=1)
+    description: Optional[str] = None 
+    promo_code: Optional[str] = None
