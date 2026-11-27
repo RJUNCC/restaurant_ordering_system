@@ -84,11 +84,30 @@ def checkout(db: Session, request):
         db.add(customer)
 
     subtotal = Decimal("0")
+    needed = {}
     for item in request.items:
         menu_item = db.query(menu_model.Menu).filter(menu_model.Menu.id == item.menu_id).first()
         if menu_item is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Menu item {item.menu_id} not found")
+        
+        for recipe in menu_item.recipes:
+            needed[recipe.resource] = needed.get(recipe.resource, 0) + recipe.amount * item.amount
+
         subtotal += menu_item.price * item.amount
+
+    shortages = []
+    for resource, qty in needed.items():
+        if resource.amount < qty:
+            shortages.append(f"{resource.ingredient}: need {qty} {resource.unit}, have {resource.amount}")
+        
+
+    if shortages:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Not enough ingredients: " + "; ".join(shortages))
+
+    for resource, qty in needed.items():
+        resource.amount = resource.amount - qty
+        
+        
 
     promo = None 
     total = subtotal 
