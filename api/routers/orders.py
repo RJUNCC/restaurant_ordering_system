@@ -37,3 +37,6 @@ def delete(item_id: int, db: Session = Depends(get_db)):
 @router.post("/checkout", response_model=schema.Order)
 def checkout(request: schema.GuestCheckout, db: Session = Depends(get_db)):
     return controller.checkout(db=db, request=request)
+@router.get("/track/{tracking_number}", response_model=schema.Order)
+def read_by_tracking(tracking_number: str, db: Session = Depends(get_db)):
+    return controller.read_by_tracking(db=db, tracking_number=tracking_number)
