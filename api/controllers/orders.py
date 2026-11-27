@@ -72,7 +72,6 @@ def delete(db: Session, item_id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-<<<<<<< HEAD
 def checkout(db: Session, request):
     customer = db.query(customer_model.Customer).filter(customer_model.Customer.phone == request.phone).first()
     if customer is None:
@@ -106,8 +105,10 @@ def checkout(db: Session, request):
         db.refresh(order)
     except SQLAlchemyError as e:
         db.rollback()
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return order
-=======
+
 def read_by_tracking(db: Session, tracking_number: str):
     try:
         item = db.query(model.Order).filter(model.Order.tracking_number == tracking_number).first()
@@ -117,4 +118,3 @@ def read_by_tracking(db: Session, tracking_number: str):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
->>>>>>> ac0a1e7d96241c5abb594dcbc8a6788b52b35652
