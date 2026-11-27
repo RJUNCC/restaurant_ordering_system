@@ -31,3 +31,19 @@ def test_create_order(db_session):
     assert created_order.customer_id == 1
     assert created_order.order_type == model.OrderType.takeout
     assert created_order.description == "Test order"
+
+def test_checkout_rejects_expired_promo():
+    response = client.post("/orders/checkout", json={
+        "name": "ryan",
+        "phone": "555-555-5555",
+        "address": "123 ABC St",
+        "order_type": "takeout",
+        "items": [{
+            "menu_id": 7,
+            "amount": 1
+        }],
+        "promo_code": "SUMMER15"
+    })
+
+    assert response.status_code == 400
+    assert "expired" in response.json()["detail"]
